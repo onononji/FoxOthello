@@ -383,6 +383,7 @@
 "Assets/Scripts/Core/Title/TitlePageModel.cs"
 "Assets/Scripts/Core/Title/TitlePageView.cs"
 "Assets/Scripts/Core/Title/TitleState.cs"
+"Assets/Scripts/Initializer.cs"
 -langversion:9.0
 
 /deterministic
