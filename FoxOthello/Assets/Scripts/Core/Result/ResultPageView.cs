@@ -12,17 +12,14 @@ namespace FoxOthello.PageSystem
 
         public override void RegisterView()
         {
-            Debug.Log("ResultPageView.RegisterView");
         }
 
         public override void UnRegisterView()
         {
-            Debug.Log("ResultPageView.UnRegisterView");
         }
 
         protected override void OnBind()
         {
-            Debug.Log("ResultPageView.OnBind");
         }
     }
 }

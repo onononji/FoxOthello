@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -5,7 +6,7 @@ using UnityEngine;
 
 namespace FoxOthello.PageSystem
 {
-    public class PageInitializer : MonoBehaviour
+    public class PageInitializer
     {
         private readonly StateMachine _stateMachine;
 
@@ -14,12 +15,12 @@ namespace FoxOthello.PageSystem
             _stateMachine = stateMachine;
         }
 
-        public async UniTask InitializeAndRun()
+        public async UniTask InitializeAndRun(Transform parentTransform)
         {
             // StateMachineの初期設定などがあればここで行う
 
             // StateMachineを実行
-            await _stateMachine.Run(new TitleState());
+            await _stateMachine.Run(new TitleState(parentTransform));
         }
     }
 }

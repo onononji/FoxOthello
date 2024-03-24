@@ -3,21 +3,40 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace FoxOthello.PageSystem
 {
     public class TitleState : BasePageState<TitlePageView.TitlePageViewModel>
     {
-        private TitlePageView view;
-        public async UniTask<IState> Start()
+        public TitleState(Transform parentTransform)
         {
-            await UniTask.Yield(); // なにかする
-            return new StateTransition(new RuleExplanationState(0).Start());
+            this.parentTransform = parentTransform;
         }
 
-        protected override BasePageView<TitlePageView.TitlePageViewModel> CreateView()
+        public override async UniTask<IState> Start()
         {
-            return new TitlePageView();
+            await StartAsync();
+            viewModel.OnDescriptionButtonPressed += OnDescriptionButtonPressed;
+            viewModel.OnStartButtonPressed += OnStartButtonPressed;
+            return this;
+        }
+
+        private async UniTask StartAsync()
+        {
+            await CreateView("Title");
+        }
+
+        private async void OnDescriptionButtonPressed()
+        {
+            await UniTask.Yield();
+            await ChangePage(new RuleExplanationState(parentTransform).Start());
+        }
+
+        private async void OnStartButtonPressed()
+        {
+            await UniTask.Yield();
+            await ChangePage(new GameState(parentTransform).Start());
         }
     }
 }

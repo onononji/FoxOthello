@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UniRx.InternalUtil;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace FoxOthello.PageSystem
 {
@@ -9,15 +13,29 @@ namespace FoxOthello.PageSystem
     {
         public class TitlePageViewModel : BasePageViewModel
         {
-            public readonly string title = null;
-            public readonly bool pressedDescriptionButton = false;
-            public readonly bool pressedStartButton = false;
+            public event Action OnDescriptionButtonPressed;
+            public event Action OnStartButtonPressed;
+
+            public void PressDescriptionButton()
+            {
+                OnDescriptionButtonPressed?.Invoke();
+            }
+
+            public void PressStartButton()
+            {
+                OnStartButtonPressed?.Invoke();
+            }
         }
 
-        [SerializeField] private string title;
-        [SerializeField] private string description;
-        [SerializeField] private bool startButton;
+        [SerializeField] private TMP_Text title;
+        [SerializeField] private Button descriptionButton;
+        [SerializeField] private Button startButton;
 
+        protected override void OnBind()
+        {
+            descriptionButton.onClick.AddListener(viewModel.PressDescriptionButton);
+            startButton.onClick.AddListener(viewModel.PressStartButton);
+        }
         public override void RegisterView()
         {
             Debug.Log("TitlePageView.RegisterView");
@@ -26,11 +44,6 @@ namespace FoxOthello.PageSystem
         public override void UnRegisterView()
         {
             Debug.Log("TitlePageView.UnRegisterView");
-        }
-
-        protected override void OnBind()
-        {
-            Debug.Log("TitlePageView.OnBind");
         }
     }
 }

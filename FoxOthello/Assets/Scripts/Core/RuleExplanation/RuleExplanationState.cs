@@ -5,19 +5,30 @@ using UnityEngine;
 
 namespace FoxOthello.PageSystem
 {
-    public class RuleExplanationState : IState
+    public class RuleExplanationState : BasePageState<RuleExplanationPageView.RuleExplanationPageViewModel>
     {
-        private readonly int _parameter;
 
-        public RuleExplanationState(int parameter)
+        public RuleExplanationState(Transform parentTransform)
         {
-            _parameter = parameter;
+            this.parentTransform = parentTransform;
         }
 
         public async UniTask<IState> Start()
         {
-            await UniTask.Yield(); // なにかする
-            return new StateTransition(new GameState(0).Start());
+            await StartAsync();
+            viewModel.OnBackButtonPressed += OnBackButtonPressed;
+            return this;
+        }
+
+        private async UniTask StartAsync()
+        {
+            await CreateView("RuleExplanation");
+        }
+
+        private async void OnBackButtonPressed()
+        {
+            await UniTask.Yield();
+            await ChangePage(new TitleState(parentTransform).Start());
         }
     }
 }

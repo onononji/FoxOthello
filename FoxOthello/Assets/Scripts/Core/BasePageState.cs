@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using FoxOthello.PageSystem;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace FoxOthello.PageSystem
 {
@@ -12,34 +13,64 @@ namespace FoxOthello.PageSystem
     /// LogicのViewModelのバインドも行う
     /// ViewModelからもらった情報により次のStateへ遷移する
     /// </summary>
-    /// <typeparam name="ViewModelType"></typeparam>
-    public abstract class BasePageState<ViewModelType> : IState where ViewModelType : BasePageView<ViewModelType>.BasePageViewModel, new()
+    /// <typeparam name="TViewModel">ViewModelの具象クラス</typeparam>
+    public abstract class BasePageState<TViewModel> : IState where TViewModel : BasePageView<TViewModel>.BasePageViewModel, new()
     {
-        protected BasePageView<ViewModelType> view { private set; get; }
-        protected ViewModelType viewModel { private set; get; }
-        protected BasePageModel<ViewModelType> model { private set; get; }
+        protected BasePageView<TViewModel> view { private set; get; }
+        protected TViewModel viewModel { private set; get; }
+        protected BasePageModel<TViewModel> model { private set; get; }
 
-        public async UniTask<IState> Start()
+        protected GameObject InstantiateObject { private set; get; }
+
+        protected Transform parentTransform { set; get; }
+
+        public virtual async UniTask<IState> Start()
         {
+            await UniTask.Yield();
             return null;
         }
 
-        protected abstract BasePageView<ViewModelType> CreateView();
+        protected async UniTask CreateView(string addressableName)
+        {
+            // addressableからprefabを生成してviewを取得する
+            GameObject viewObject = await Addressables.LoadAssetAsync<GameObject>(addressableName).Task;
+
+            if(viewObject != null)
+            {
+                await UniTask.SwitchToMainThread();
+                InstantiateView(viewObject);
+                if(view != null)
+                {
+                    GeneratePage();
+                }
+            }
+        }
+
+        protected void InstantiateView(GameObject viewObject)
+        {
+            InstantiateObject = MonoBehaviour.Instantiate(viewObject, parentTransform);
+            view = InstantiateObject.GetComponent<BasePageView<TViewModel>>();
+        }
 
         protected void GeneratePage()
         {
-            // あとでprefabを生成してviewを取得するように変更する
-            view = CreateView();
             // viewmodelを生成してviewにバインドする
-            viewModel = new ViewModelType();
+            viewModel = new TViewModel();
             view.BindViewModel(viewModel);
-            model = new BasePageModel<ViewModelType>();
+            model = new BasePageModel<TViewModel>();
             model.BindViewModel(viewModel);
         }
 
-        protected void BindViewModel(ViewModelType viewModel)
+        protected async UniTask ChangePage(UniTask<IState> nextPageTask)
         {
-            this.viewModel = viewModel;
+            // InstantiateObjectを破棄する
+            InstantiateObject.transform.SetParent(null);
+            GameObject.Destroy(InstantiateObject);
+
+            // viewmodelを破棄する
+            viewModel.Dispose();
+
+            await nextPageTask;
         }
     }
 }

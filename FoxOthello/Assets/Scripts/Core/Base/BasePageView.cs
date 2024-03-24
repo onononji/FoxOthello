@@ -8,11 +8,11 @@ namespace FoxOthello.PageSystem
     /// <summary>
     /// PageViewの基底クラス
     /// </summary>
-    /// <typeparam name="ViewModelType"></typeparam>
-    public abstract class BasePageView<ViewModelType> : MonoBehaviour, IPageView  where ViewModelType : BasePageView<ViewModelType>.BasePageViewModel
+    /// <typeparam name="TViewModel"></typeparam>
+    public abstract class BasePageView<TViewModel> : MonoBehaviour, IPageView  where TViewModel : BasePageView<TViewModel>.BasePageViewModel
     {
-        protected ViewModelType viewModel { private set; get; }
-        protected readonly CompositeDisposable disposable = new();
+        protected TViewModel viewModel { private set; get; }
+        protected readonly CompositeDisposable disposable = new CompositeDisposable();
 
         private void OnDestroy()
         {
@@ -36,7 +36,7 @@ namespace FoxOthello.PageSystem
             }
         }
 
-        public void BindViewModel(ViewModelType viewModel)
+        public void BindViewModel(TViewModel viewModel)
         {
             if (!disposable.IsDisposed)
             {

@@ -5,19 +5,27 @@ using UnityEngine;
 
 namespace FoxOthello.PageSystem
 {
-    public class ResultState : IState
+    public class ResultState : BasePageState<ResultPageView.ResultPageViewModel>
     {
-        private readonly int _parameter;
 
-        public ResultState(int parameter)
+        public ResultState(Transform parentTransform)
         {
-            _parameter = parameter;
+            this.parentTransform = parentTransform;
         }
 
-        public async UniTask<IState> Start()
+        public override async UniTask<IState> Start()
         {
-            await UniTask.Yield(); // なにかする
-            return new StateTransition(new TitleState().Start());
+            await StartAsync();
+            return this;
+        }
+
+        private async UniTask StartAsync()
+        {
+            await CreateView("Result");
+
+            // 5秒待つ
+            await UniTask.Delay(5000);
+            await ChangePage(new TitleState(parentTransform).Start());
         }
     }
 }

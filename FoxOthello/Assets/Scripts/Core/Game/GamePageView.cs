@@ -4,19 +4,30 @@ using UnityEngine;
 
 namespace FoxOthello.PageSystem
 {
-    public class GamePageView : MonoBehaviour
+    public class GamePageView : BasePageView<GamePageView.GamePageViewModel>
     {
-        // Start is called before the first frame update
-        void Start()
+        public class GamePageViewModel : BasePageViewModel
         {
-
+            public GamePageViewModel()
+            {
+            }
         }
 
-        // Update is called once per frame
-        void Update()
+        public GamePageView()
         {
+        }
 
+
+        protected override void OnBind()
+        {
+        }
+
+        public override void RegisterView()
+        {
+        }
+
+        public override void UnRegisterView()
+        {
         }
     }
-
 }

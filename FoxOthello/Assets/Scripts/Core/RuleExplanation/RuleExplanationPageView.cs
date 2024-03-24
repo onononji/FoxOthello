@@ -1,22 +1,38 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace FoxOthello.PageSystem
 {
-    public class RuleExplanationPageView : MonoBehaviour
+    public class RuleExplanationPageView : BasePageView<RuleExplanationPageView.RuleExplanationPageViewModel>
     {
-        // Start is called before the first frame update
-        void Start()
+        public class RuleExplanationPageViewModel : BasePageViewModel
         {
+            public event Action OnBackButtonPressed;
 
+            public void PressBackButton()
+            {
+                OnBackButtonPressed?.Invoke();
+            }
         }
 
-        // Update is called once per frame
-        void Update()
-        {
+        [SerializeField] private Button backButton;
+        [SerializeField] private TMP_Text ruleText;
 
+        protected override void OnBind()
+        {
+            backButton.onClick.AddListener(viewModel.PressBackButton);
+        }
+
+        public override void RegisterView()
+        {
+        }
+
+        public override void UnRegisterView()
+        {
         }
     }
-
 }

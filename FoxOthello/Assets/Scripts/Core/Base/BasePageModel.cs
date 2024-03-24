@@ -4,11 +4,15 @@ using UnityEngine;
 
 namespace FoxOthello.PageSystem
 {
-    public class BasePageModel<ViewModelType> : IPageLogic where ViewModelType : BasePageView<ViewModelType>.BasePageViewModel
+    /// <summary>
+    /// PageにおけるModelの基底クラス
+    /// </summary>
+    /// <typeparam name="TViewModel"></typeparam>
+    public class BasePageModel<TViewModel> : IPageLogic where TViewModel : BasePageView<TViewModel>.BasePageViewModel
     {
-        protected ViewModelType viewModel { private set; get; }
+        protected TViewModel viewModel { private set; get; }
 
-        public void BindViewModel(ViewModelType viewModel)
+        public void BindViewModel(TViewModel viewModel)
         {
             this.viewModel = viewModel;
         }

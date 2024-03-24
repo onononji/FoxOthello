@@ -11,7 +11,7 @@ namespace FoxOthello.PageSystem
         {
             var currentState = firstState;
 
-            while (currentState != null)
+            if (currentState != null)
             {
                 currentState = await currentState.Start();
             }
