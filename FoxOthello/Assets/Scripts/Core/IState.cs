@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace FoxOthello.PageState{
+namespace FoxOthello.PageSystem{
     public interface IState
     {
         UniTask<IState> Start();

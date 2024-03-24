@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace FoxOthello.PageState
+namespace FoxOthello.PageSystem
 {
     public class GameState : IState
     {
-        private readonly int _parameter;
+        private readonly int parameter;
 
         public GameState(int parameter)
         {
-            _parameter = parameter;
+            this.parameter = parameter;
         }
 
         public async UniTask<IState> Start()

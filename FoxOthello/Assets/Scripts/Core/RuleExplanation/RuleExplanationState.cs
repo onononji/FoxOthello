@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace FoxOthello.PageState
+namespace FoxOthello.PageSystem
 {
     public class RuleExplanationState : IState
     {
